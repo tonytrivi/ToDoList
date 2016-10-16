@@ -1,1 +1,1 @@
-# ToDoList - add built with React
+# ToDoList - built with React
