@@ -3,18 +3,21 @@ import TaskList from './tasklist.js';
 
 const tasks = [
     {
+        ID: 1,
         description: 'paint the fence',
         timeCreated: Date.now(),
         isCompleted: false,
         isExpired: false
     },
     {
+        ID: 2,
         description: 'wax the car',
         timeCreated: Date.now(),
         isCompleted: false,
         isExpired: false
     },
     {
+        ID: 3,
         description: 'sand the floor',
         timeCreated: Date.now(),
         isCompleted: true,
