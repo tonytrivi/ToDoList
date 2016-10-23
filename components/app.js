@@ -1,25 +1,26 @@
 import React from 'react';
 import TaskList from './tasklist.js';
 
+var d = new Date();
 const tasks = [
     {
         ID: 1,
         description: 'paint the fence',
-        timeCreated: Date.now(),
+        timeCreated: new Date(2016, 10, 11),
         isCompleted: false,
         isExpired: false
     },
     {
         ID: 2,
         description: 'wax the car',
-        timeCreated: Date.now(),
+        timeCreated: new Date(2016, 9, 14),
         isCompleted: false,
         isExpired: false
     },
     {
         ID: 3,
         description: 'sand the floor',
-        timeCreated: Date.now(),
+        timeCreated: new Date(2016, 11, 3),
         isCompleted: true,
         isExpired: false
     }

@@ -5,22 +5,21 @@ export default class TaskList extends React.Component {
         var taskList = this.props.tasks.map(function(task){
                         return <div className="task-item-container" key={task.ID}>
                             <div className="task-item">
-                            <span className="task-item-desc">{task.description}</span>
+                                <span className="task-item-desc">{task.description}</span>
+                                <span className="task-item-desc right">{task.timeCreated.getMonth()}/{task.timeCreated.getDate()}</span>
                             </div>
                         </div>;
                       })
 
-        return  <ul>{ taskList }</ul>
+        return <div>{ taskList }</div>
     }
     render() {
         console.log(this.props.tasks);
 
         return (
             <div>
-                <div><span className="header-text">Task List</span></div>
-                <ul>
-                    {this.renderItems()}
-                </ul>
+                <div><span className="span-shim"></span><span className="header-text">Task List</span></div>
+                {this.renderItems()}
             </div>
         );
     }
