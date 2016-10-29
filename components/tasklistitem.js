@@ -12,7 +12,7 @@ export default class TaskListItem extends React.Component {
     renderActionsSection() {
         if (this.state.isEditing) {
             return (
-                <span className="task-item-desc right">{this.props.time.getMonth()}/{this.props.time.getDate()} 
+                <span className="task-item-desc right">{this.props.monthCreated}/{this.props.dateCreated} 
                         <span> </span>
                         <img src="../resources/images/edit_gn.svg" 
                             className="edit-img"
@@ -31,7 +31,7 @@ export default class TaskListItem extends React.Component {
         }
 
         return (
-            <span className="task-item-desc right">{this.props.time.getMonth()}/{this.props.time.getDate()} 
+            <span className="task-item-desc right">{this.props.monthCreated}/{this.props.dateCreated}  
                         <span> </span>
                         <img src="../resources/images/edit.svg" 
                             className="edit-img"

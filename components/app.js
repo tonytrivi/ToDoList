@@ -1,5 +1,6 @@
 import React from 'react';
 import TaskList from './tasklist.js';
+import CreateTask from './createtask.js';
 
 var d = new Date();
 const tasks = [
@@ -38,9 +39,29 @@ export default class App extends React.Component {
     render() {
         return (
             <div>
-                <TaskList tasks={this.state.tasks}/>
+                <CreateTask createTask={this.createTask.bind(this)} />
+                <TaskList 
+                    tasks={this.state.tasks} />
                 <div className="icon-credit">Icons made by <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">Madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
             </div>
         );
+    }
+
+    createTask(desc) {
+        var theDate = new Date();
+        var m = theDate.getMonth();
+        theDate.setMonth(m+1);
+
+        var newTask = {
+            ID: 4,
+            description: desc,
+            timeCreated: theDate,
+            isCompleted: false,
+            isExpired: false
+        };
+
+        this.state.tasks.push(newTask);
+        this.setState({ tasks: this.state.tasks });
+
     }
 }

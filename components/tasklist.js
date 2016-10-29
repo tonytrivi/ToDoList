@@ -4,7 +4,7 @@ import TaskListItem from './tasklistitem.js';
 export default class TaskList extends React.Component {
     renderItems () {
         var taskList = this.props.tasks.map(function(task, index){
-                        return <TaskListItem key={index} desc={task.description} time={task.timeCreated}  />;
+                        return <TaskListItem key={index} desc={task.description} monthCreated={task.timeCreated.getMonth()} dateCreated={task.timeCreated.getDate()}   />;
                       })
 
         return <div>{ taskList }</div>
