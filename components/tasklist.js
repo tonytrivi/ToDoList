@@ -1,19 +1,16 @@
 import React from 'react';
+import TaskListItem from './tasklistitem.js';
 
 export default class TaskList extends React.Component {
     renderItems () {
-        var taskList = this.props.tasks.map(function(task){
-                        return <div className="task-item-container" key={task.ID}>
-                            <div className="task-item">
-                                <span className="task-item-desc">{task.description}</span>
-                                <span className="task-item-desc right">{task.timeCreated.getMonth()}/{task.timeCreated.getDate()}</span>
-                            </div>
-                        </div>;
+        var taskList = this.props.tasks.map(function(task, index){
+                        return <TaskListItem key={index} desc={task.description} time={task.timeCreated}  />;
                       })
 
         return <div>{ taskList }</div>
     }
     render() {
+        //you can add extra code here - like console logging in this case
         console.log(this.props.tasks);
 
         return (
