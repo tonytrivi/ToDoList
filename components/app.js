@@ -56,13 +56,14 @@ export default class App extends React.Component {
             //get the object with the description we're looking for
             return task.description === taskDesc;
         }
+
+        console.log("we are in the top level toggle task");
         
         //this refers to the component
-        console.log("we are in the top level toggle task");
-        console.log(taskDesc);
-        //var foundTaskObj = this.state.tasks.find(findTaskObj);
-        //foundTaskObj.isCompleted = !foundTaskObj.isCompleted;
-        //this.setState({ tasks: this.state.tasks });
+        var foundTaskObj = this.state.tasks.find(findTaskObj);
+        foundTaskObj.isCompleted = !foundTaskObj.isCompleted;
+        console.log(foundTaskObj);
+        this.setState({ tasks: this.state.tasks });
     }
 
     /*
