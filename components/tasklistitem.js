@@ -9,10 +9,26 @@ export default class TaskListItem extends React.Component {
         };
     }
 
+    renderTaskSection() {
+        var taskDesc = this.props.desc;
+
+        const taskStyle = {
+            color: this.props.isCompleted ? 'green' : 'red',
+            cursor: 'pointer'
+        };
+        return (
+            <span className="task-item-desc" 
+                  style={taskStyle}
+                  onClick={this.handleToggle.bind(this)}
+                  ref="descSpan" >
+                  {this.props.desc}</span>
+        );
+    }
+
     renderActionsSection() {
         if (this.state.isEditing) {
             return (
-                <span className="task-item-desc right">{this.props.monthCreated}/{this.props.dateCreated} 
+                <span className="task-item-date right">{this.props.monthCreated}/{this.props.dateCreated} 
                         <span> </span>
                         <img src="../resources/images/edit_gn.svg" 
                             className="edit-img"
@@ -31,7 +47,7 @@ export default class TaskListItem extends React.Component {
         }
 
         return (
-            <span className="task-item-desc right">{this.props.monthCreated}/{this.props.dateCreated}  
+            <span className="task-item-date right">{this.props.monthCreated}/{this.props.dateCreated}  
                         <span> </span>
                         <img src="../resources/images/edit.svg" 
                             className="edit-img"
@@ -56,7 +72,7 @@ export default class TaskListItem extends React.Component {
         return (
             <div className="task-item-container">
                 <div className="task-item">
-                    <span className="task-item-desc">{this.props.desc}</span>
+                    {this.renderTaskSection()}
                     {this.renderActionsSection()}
                 </div>
             </div>
@@ -65,8 +81,10 @@ export default class TaskListItem extends React.Component {
 
     /* 
     // handler for the edit-pencil click
+    // in most cases you'd want to handle setting state in the top-level component
     */
     onEditClick() {
+        //this refers to the component
         this.setState({ isEditing: true });
     }
 
@@ -83,5 +101,9 @@ export default class TaskListItem extends React.Component {
     */
     onRevertClick() {
         this.setState({ isEditing: false });
+    }
+
+    handleToggle(event) {
+        this.props.toggleTask(this.refs.descSpan.innerHTML);
     }
 }

@@ -6,11 +6,11 @@
 .header-text {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 1.1em;
-    color: lightpink;
+    color: #BF2303;
 }
 
 .task-item-container {
-    background-color: #f2f7ff;
+    background-color: #f9f5d4;
     width: 320px;
     height: 50px;
     border-style: solid;
@@ -35,8 +35,15 @@
 }
 
 .task-item-desc {
-    color: lightseagreen;
+    color: #3d3c3c;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: .9em;
+}
+
+.task-item-date {
+    color: #9b9a99;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: .8em;
 }
 
 .icon-credit {

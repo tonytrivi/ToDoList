@@ -1,10 +1,12 @@
+import _ from 'lodash';
 import React from 'react';
 import TaskListItem from './tasklistitem.js';
 
 export default class TaskList extends React.Component {
     renderItems () {
+        var toggleFunc = this.props.toggleTask;
         var taskList = this.props.tasks.map(function(task, index){
-                        return <TaskListItem key={index} desc={task.description} monthCreated={task.timeCreated.getMonth()} dateCreated={task.timeCreated.getDate()}   />;
+                        return <TaskListItem key={index} desc={task.description} monthCreated={task.timeCreated.getMonth()} dateCreated={task.timeCreated.getDate()} isCompleted={task.isCompleted} toggleTask={toggleFunc} />;
                       })
 
         return <div>{ taskList }</div>
