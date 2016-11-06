@@ -16,12 +16,27 @@ export default class TaskListItem extends React.Component {
             color: this.props.isCompleted ? 'green' : 'red',
             cursor: 'pointer'
         };
+
+        if (this.state.isEditing) {
+            return (
+                <div className="task-item-desc-container">
+                    <form onSubmit={this.onSaveClick.bind(this)}>
+                        <input className="task-item-input" 
+                            ref="descInput"
+                            defaultValue={this.props.desc} />
+                    </form>
+                </div>
+            );
+
+        }
         return (
-            <span className="task-item-desc" 
+            <div className="task-item-desc-container">
+                <span className="task-item-desc" 
                   style={taskStyle}
                   onClick={this.handleToggle.bind(this)}
                   ref="descSpan" >
                   {this.props.desc}</span>
+            </div>
         );
     }
 
@@ -34,7 +49,8 @@ export default class TaskListItem extends React.Component {
                             className="edit-img"
                             alt="edit" 
                             height="15" 
-                            width="15" /> 
+                            width="15"
+                            onClick={this.onSaveClick.bind(this)} /> 
                         <span> </span>
                         <img src="../resources/images/revert.svg" 
                             className="delete-img"
@@ -42,7 +58,7 @@ export default class TaskListItem extends React.Component {
                             height="14" 
                             width="14"
                             onClick={this.onRevertClick.bind(this)} />
-                    </span>
+                </span>
             );
         }
 
@@ -63,7 +79,6 @@ export default class TaskListItem extends React.Component {
                             width="14"
                             onClick={this.onDeleteClick.bind(this)} />
             </span>
-
         );
     }
     
@@ -103,7 +118,20 @@ export default class TaskListItem extends React.Component {
         this.setState({ isEditing: false });
     }
 
+    /* 
+    // when item descripton is clicked - sends the toggle call up to app.js
+    */
     handleToggle(event) {
         this.props.toggleTask(this.refs.descSpan.innerHTML);
+    }
+
+    /* 
+    // handles clicking the image to save an edited description
+    */
+    onSaveClick(event) {
+        event.preventDefault();
+        this.props.saveTask(this.props.desc, this.refs.descInput.value);
+
+        this.setState({ isEditing: false });
     }
 }

@@ -42,7 +42,8 @@ export default class App extends React.Component {
                 <CreateTask createTask={this.createTask.bind(this)} />
                 <TaskList 
                     tasks={this.state.tasks}
-                    toggleTask={this.toggleTask.bind(this)} />
+                    toggleTask={this.toggleTask.bind(this)} 
+                    saveTask={this.saveTask.bind(this)} />
                 <div className="icon-credit">icons made by <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">Madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
             </div>
         );
@@ -85,5 +86,19 @@ export default class App extends React.Component {
         this.state.tasks.push(newTask);
         this.setState({ tasks: this.state.tasks });
 
+    }
+
+    /*
+    //changes a task description and saves it
+    */
+    saveTask(oldTaskDesc, newTaskDesc){
+        function findTaskObj(task) {
+            //get the object with the description we're looking for
+            return task.description === oldTaskDesc;
+        }
+        
+        var foundTaskObj = this.state.tasks.find(findTaskObj);
+        foundTaskObj.description = newTaskDesc;
+        this.setState({ tasks: this.state.tasks });
     }
 }

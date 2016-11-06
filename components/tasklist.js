@@ -5,8 +5,9 @@ import TaskListItem from './tasklistitem.js';
 export default class TaskList extends React.Component {
     renderItems () {
         var toggleFunc = this.props.toggleTask;
+        var saveFunc = this.props.saveTask;
         var taskList = this.props.tasks.map(function(task, index){
-                        return <TaskListItem key={index} desc={task.description} monthCreated={task.timeCreated.getMonth()} dateCreated={task.timeCreated.getDate()} isCompleted={task.isCompleted} toggleTask={toggleFunc} />;
+                        return <TaskListItem key={index} desc={task.description} monthCreated={task.timeCreated.getMonth()} dateCreated={task.timeCreated.getDate()} isCompleted={task.isCompleted} toggleTask={toggleFunc} saveTask={saveFunc}  />;
                       })
 
         return <div>{ taskList }</div>
