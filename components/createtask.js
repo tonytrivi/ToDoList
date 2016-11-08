@@ -8,9 +8,9 @@ export default class CreateTask extends React.Component {
                 <span className="header-text">Create a task</span>
                 <form onSubmit={this.handleCreate.bind(this)}>
                     <span className="span-shim"></span>
-                    <input type="text" placeholder="What to do?" ref="createInput" />
+                    <input className="create-task-input" type="text" placeholder="What to do?" ref="createInput" />
                     <span> </span>
-                    <button>
+                    <button className="create-button">
                         <img src="../resources/images/add.svg" 
                         className="add-img"
                         alt="add" 
