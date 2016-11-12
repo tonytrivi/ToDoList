@@ -14,7 +14,7 @@ export default class TaskList extends React.Component {
     }
     render() {
         //you can add extra code here - like console logging in this case
-        console.log(this.props.tasks);
+        //console.log(this.props.tasks);
 
         return (
             <div className="task-list">
