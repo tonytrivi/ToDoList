@@ -1,6 +1,7 @@
 import React from 'react';
 import TaskList from './tasklist.js';
 import CreateTask from './createtask.js';
+import * as firebase from 'firebase';
 
 var d = new Date();
 const tasks = [
@@ -33,7 +34,32 @@ export default class App extends React.Component {
 
         this.state = {
             tasks: tasks
+            //, testTask: null
         };
+    }
+
+    //set up database listeners in this method, which occurs after render()    
+    componentDidMount(){
+        //object should be off the root
+        //when I wrote this, object had a couple test objects under it
+        const dbRefObject = firebase.database().ref().child('object');
+        
+        var newTask = {
+            ID: 26,
+            description: 'sand the floor',
+            timeCreated: "2016-11-22",
+            isCompleted: true,
+            isExpired: false
+        }
+        //dbRefObject.push(newTask);
+
+        //do data sync on the value event type
+        dbRefObject.on('value', snapshot => {
+            //console.log(this.state.testTask); //null
+            //this.setState({
+                //testTask: snapshot.val()
+            //});
+        });  
     }
 
     render() {
