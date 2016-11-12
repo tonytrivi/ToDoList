@@ -38,6 +38,9 @@ export default class App extends React.Component {
         };
     }
 
+    componentWillMount(){
+    }
+
     //set up database listeners in this method, which occurs after render()    
     componentDidMount(){
         //object should be off the root
@@ -97,21 +100,24 @@ export default class App extends React.Component {
     //this method is at this level because it needs access to const tasks
     */
     createTask(desc) {
+        const firebaseRefObject = firebase.database().ref().child('object');
+
         var theDate = new Date();
         var m = theDate.getMonth();
         theDate.setMonth(m+1);
 
         var newTask = {
-            ID: 4,
+            ID: this.state.tasks.length + 1,
             description: desc,
-            timeCreated: theDate,
+            timeCreated: theDate.toISOString(),
             isCompleted: false,
             isExpired: false
         };
 
+        firebaseRefObject.push(newTask);
         this.state.tasks.push(newTask);
+        
         this.setState({ tasks: this.state.tasks });
-
     }
 
     /*
