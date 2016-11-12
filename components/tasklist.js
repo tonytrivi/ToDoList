@@ -6,8 +6,9 @@ export default class TaskList extends React.Component {
     renderItems () {
         var toggleFunc = this.props.toggleTask;
         var saveFunc = this.props.saveTask;
+        var deleteFunc = this.props.deleteTask;
         var taskList = this.props.tasks.map(function(task, index){
-                        return <TaskListItem key={index} desc={task.description} dateCreated={task.timeCreated} isCompleted={task.isCompleted} toggleTask={toggleFunc} saveTask={saveFunc}  />;
+                        return <TaskListItem key={index} desc={task.description} dateCreated={task.timeCreated} isCompleted={task.isCompleted} toggleTask={toggleFunc} saveTask={saveFunc} deleteTask={deleteFunc} ID={task.ID}  />;
                       })
 
         return <div>{ taskList }</div>

@@ -105,11 +105,11 @@ export default class TaskListItem extends React.Component {
     }
 
     /* 
-    // handler for the delete-pencil click
+    // handler for clicking the delete X
     */
     onDeleteClick() {
-        //add logic for delete
-        console.log('you clicked delete');
+        //call up to the function in app.js
+        this.props.deleteTask(this.props.ID);
     }
 
     /* 

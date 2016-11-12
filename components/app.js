@@ -43,9 +43,6 @@ export default class App extends React.Component {
 
     //set up database listeners in this method, which occurs after render()    
     componentDidMount(){
-        //object should be off the root
-        const dbRefObject = firebase.database().ref().child('object');
-
     }
 
     render() {
@@ -55,7 +52,8 @@ export default class App extends React.Component {
                 <TaskList 
                     tasks={this.state.tasks}
                     toggleTask={this.toggleTask.bind(this)} 
-                    saveTask={this.saveTask.bind(this)} />
+                    saveTask={this.saveTask.bind(this)}
+                    deleteTask={this.deleteTask.bind(this)} />
                 <div className="icon-credit">Icons <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">Madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
             </div>
         );
@@ -94,7 +92,7 @@ export default class App extends React.Component {
         theDate.setMonth(m+1);
 
         var newTask = {
-            ID: this.state.tasks.length + 1,
+            ID: this.state.tasks.length + (Math.floor(Math.random() * 100000) + 1),
             description: desc,
             timeCreated: theDate.toISOString(),
             isCompleted: false,
@@ -108,9 +106,11 @@ export default class App extends React.Component {
     }
 
     /*
-    //changes a task description and saves it
+    // changes a task description and saves it
     */
     saveTask(oldTaskDesc, newTaskDesc){
+        const firebaseRefObject = firebase.database().ref().child('object');
+
         function findTaskObj(task) {
             //get the object with the description we're looking for
             return task.description === oldTaskDesc;
@@ -118,6 +118,30 @@ export default class App extends React.Component {
         
         var foundTaskObj = this.state.tasks.find(findTaskObj);
         foundTaskObj.description = newTaskDesc;
+
+        //overwrite the database tasks
+        firebaseRefObject.set(this.state.tasks);
+
         this.setState({ tasks: this.state.tasks });
+    }
+
+    /*
+    // deletes a task
+    */
+    deleteTask(ID){
+        const firebaseRefObject = firebase.database().ref().child('object');
+        
+        for (var i=0; i<this.state.tasks.length; i++){
+            if (this.state.tasks[i].ID == ID){
+                //remove item at this position
+                console.log("Here, remove the item with description " + this.state.tasks[i].description );
+                this.state.tasks.splice(i, 1);
+            };
+        };
+
+        //overwrite the database tasks
+        firebaseRefObject.set(this.state.tasks);
+
+        //this.setState({ tasks: this.state.tasks });
     }
 }
