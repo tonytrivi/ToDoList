@@ -1,6 +1,7 @@
 import React from 'react';
 import TaskList from './tasklist.js';
 import CreateTask from './createtask.js';
+import MoveExpired from './moveexpired.js';
 import * as firebase from 'firebase';
 
 var d = new Date();
@@ -40,8 +41,7 @@ export default class App extends React.Component {
             });
         });
     }
-
-    //set up database listeners in this method, which occurs after render()    
+  
     componentDidMount(){
     }
 
@@ -54,6 +54,7 @@ export default class App extends React.Component {
                     toggleTask={this.toggleTask.bind(this)} 
                     saveTask={this.saveTask.bind(this)}
                     deleteTask={this.deleteTask.bind(this)} />
+                <MoveExpired moveExpired={this.moveExpired.bind(this)} />
                 <div className="icon-credit">Icons <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">cc 3.0 by</a></div>
             </div>
         );
@@ -79,6 +80,13 @@ export default class App extends React.Component {
         firebaseRefObject.set(this.state.tasks);
         //refresh tasks
         this.setState({ tasks: this.state.tasks });
+    }
+
+    /*
+    // Moves expired tasks to sub list
+    */
+    moveExpired(arg) {
+        console.log(arg);
     }
 
     /*
