@@ -5,7 +5,6 @@ import ViewExpired from './viewexpired.js';
 import * as firebase from 'firebase';
 
 var d = new Date();
-var firebaseRef = null;
 
 export default class App extends React.Component {
     constructor(props){
@@ -19,7 +18,7 @@ export default class App extends React.Component {
 
     componentWillMount(){
         //list tasks
-        firebaseRef = firebase.database().ref().child('object');
+        const firebaseRef = firebase.database().ref().child('object');
         
         var that = this;
 
@@ -50,17 +49,33 @@ export default class App extends React.Component {
     }
 
     render() {
+        if (this.state.viewExpired) {
+            return (
+                    <div className="app-surround">
+                        <TaskList 
+                            tasks={this.state.tasks}
+                            toggleTask={this.toggleTask.bind(this)} 
+                            saveTask={this.saveTask.bind(this)}
+                            deleteTask={this.deleteTask.bind(this)}
+                            viewExpired={this.state.viewExpired} />
+                        <ViewExpired viewExpired={this.viewExpired.bind(this)} />
+                        <div className="icon-credit">Icons <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">cc 3.0 by</a></div>
+                    </div>
+            );
+        }
+
         return (
-            <div className="app-surround">
-                <CreateTask createTask={this.createTask.bind(this)} />
-                <TaskList 
-                    tasks={this.state.tasks}
-                    toggleTask={this.toggleTask.bind(this)} 
-                    saveTask={this.saveTask.bind(this)}
-                    deleteTask={this.deleteTask.bind(this)} />
-                <ViewExpired viewExpired={this.viewExpired.bind(this)} />
-                <div className="icon-credit">Icons <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">cc 3.0 by</a></div>
-            </div>
+                    <div className="app-surround">
+                        <CreateTask createTask={this.createTask.bind(this)} />
+                        <TaskList 
+                            tasks={this.state.tasks}
+                            toggleTask={this.toggleTask.bind(this)} 
+                            saveTask={this.saveTask.bind(this)}
+                            deleteTask={this.deleteTask.bind(this)}
+                            viewExpired={this.state.viewExpired} />
+                        <ViewExpired viewExpired={this.viewExpired.bind(this)} />
+                        <div className="icon-credit">Icons <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">cc 3.0 by</a></div>
+                    </div>
         );
     }
 
@@ -68,7 +83,7 @@ export default class App extends React.Component {
     //mark a task as completed
     */
     toggleTask(taskDesc){
-        firebaseRef = firebase.database().ref().child('object');
+        const firebaseRef = firebase.database().ref().child('object');
 
         function findTaskObj(task) {
             //get the object with the description we're looking for
@@ -91,7 +106,7 @@ export default class App extends React.Component {
     */
     viewExpired() {
         //get expired tasks
-        firebaseRef = firebase.database().ref().child('expired');
+        const firebaseRef = firebase.database().ref().child('expired');
         
         var that = this;
 
@@ -113,6 +128,7 @@ export default class App extends React.Component {
                 //set state to the tasks from the database
                 that.setState({
                     tasks: inflatedTasks,
+                    viewExpired: true
                 });
             });
         });
@@ -172,7 +188,7 @@ export default class App extends React.Component {
         for (var i=0; i<this.state.tasks.length; i++){
             if (this.state.tasks[i].ID == ID){
                 //remove item at this position
-                console.log("Here, remove the item with description " + this.state.tasks[i].description );
+                console.log("remove the item with description " + this.state.tasks[i].description );
                 this.state.tasks.splice(i, 1);
             };
         };

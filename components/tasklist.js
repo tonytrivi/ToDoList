@@ -4,6 +4,7 @@ import TaskListItem from './tasklistitem.js';
 
 export default class TaskList extends React.Component {
     renderItems () {
+        var that = this;
         var toggleFunc = this.props.toggleTask;
         var saveFunc = this.props.saveTask;
         var deleteFunc = this.props.deleteTask;
@@ -14,14 +15,11 @@ export default class TaskList extends React.Component {
         return <div>{ taskList }</div>
     }
     render() {
-        //you can add extra code here - like console logging in this case
-        //console.log(this.props.tasks);
-
         return (
-            <div className="task-list">
-                <div><span className="span-shim"></span><span className="header-text">Task list</span></div>
-                {this.renderItems()}
-            </div>
+                <div className="task-list">
+                    <div><span className="span-shim"></span><span className="header-text">Task List</span></div>
+                    {this.renderItems()}
+                </div>
         );
     }
 }

@@ -85,14 +85,14 @@ export default class TaskListItem extends React.Component {
     
     
     render() {
-        return (
-            <div className="task-item-container">
-                <div className="task-item">
-                    {this.renderTaskSection()}
-                    {this.renderActionsSection()}
+            return (
+                <div className="task-item-container">
+                    <div className="task-item">
+                        {this.renderTaskSection()}
+                        {this.renderActionsSection()}
+                    </div>
                 </div>
-            </div>
-        );
+            );
     }
 
     /* 
