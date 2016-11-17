@@ -1,12 +1,12 @@
 import React from 'react';
 
-export default class MoveExpired extends React.Component {
+export default class ViewExpired extends React.Component {
     render() {
         return (
             <div className="move-div">
                 <div className="move-text-container">
                     <span className="span-shim"></span>
-                    <span className="header-text">Move expired tasks </span>
+                    <span className="header-text">View expired tasks </span>
                 </div>
                 <div className="move-button-container">
                     <span className="span-shim"></span>
@@ -16,15 +16,15 @@ export default class MoveExpired extends React.Component {
                         alt="add" 
                         height="15" 
                         width="15"
-                        onClick={this.handleTaskMove.bind(this)} /> 
+                        onClick={this.handleViewExpired.bind(this)} /> 
                     </button>
                 </div>
             </div>
         );
     }
 
-    handleTaskMove(event) {
+    handleViewExpired(event) {
         console.log('we are in handleTaskMove');
-        this.props.moveExpired('a big arg');
+        this.props.viewExpired('a big arg');
     }
 }

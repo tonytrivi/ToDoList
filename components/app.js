@@ -1,26 +1,30 @@
 import React from 'react';
 import TaskList from './tasklist.js';
 import CreateTask from './createtask.js';
-import MoveExpired from './moveexpired.js';
+import ViewExpired from './viewexpired.js';
 import * as firebase from 'firebase';
 
 var d = new Date();
+var firebaseRef = null;
 
 export default class App extends React.Component {
     constructor(props){
         super(props);
 
         this.state = {
-            tasks: []
+            tasks: [],
+            viewExpired: false
         };
     }
 
     componentWillMount(){
-        const firebaseRefObject = firebase.database().ref().child('object');
+        //list tasks
+        firebaseRef = firebase.database().ref().child('object');
+        
         var that = this;
 
         //do data sync
-        firebaseRefObject.on('value', snapshot => {
+        firebaseRef.on('value', snapshot => {
             var inflatedTasks = [];
             
             //loop over database objects - prepare for display
@@ -36,7 +40,7 @@ export default class App extends React.Component {
                 inflatedTasks.push(inflatedTask);
                 //set state to the tasks from the database
                 that.setState({
-                    tasks: inflatedTasks
+                    tasks: inflatedTasks,
                 });
             });
         });
@@ -54,7 +58,7 @@ export default class App extends React.Component {
                     toggleTask={this.toggleTask.bind(this)} 
                     saveTask={this.saveTask.bind(this)}
                     deleteTask={this.deleteTask.bind(this)} />
-                <MoveExpired moveExpired={this.moveExpired.bind(this)} />
+                <ViewExpired viewExpired={this.viewExpired.bind(this)} />
                 <div className="icon-credit">Icons <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">cc 3.0 by</a></div>
             </div>
         );
@@ -64,7 +68,7 @@ export default class App extends React.Component {
     //mark a task as completed
     */
     toggleTask(taskDesc){
-        const firebaseRefObject = firebase.database().ref().child('object');
+        firebaseRef = firebase.database().ref().child('object');
 
         function findTaskObj(task) {
             //get the object with the description we're looking for
@@ -77,16 +81,42 @@ export default class App extends React.Component {
         console.log(foundTaskObj);
 
         //overwrite the database tasks
-        firebaseRefObject.set(this.state.tasks);
+        firebaseRef.set(this.state.tasks);
         //refresh tasks
         this.setState({ tasks: this.state.tasks });
     }
 
     /*
-    // Moves expired tasks to sub list
+    // set to view expired tasks
     */
-    moveExpired(arg) {
-        console.log(arg);
+    viewExpired() {
+        //get expired tasks
+        firebaseRef = firebase.database().ref().child('expired');
+        
+        var that = this;
+
+        //do data sync
+        firebaseRef.on('value', snapshot => {
+            var inflatedTasks = [];
+            
+            //loop over database objects - prepare for display
+            snapshot.forEach(function(data){
+                var inflatedTask = {
+                    ID: data.val().ID,
+                    description: data.val().description,
+                    timeCreated: data.val().timeCreated,
+                    isCompleted: data.val().isCompleted,
+                    isExpired: data.val().isExpired
+                }
+
+                inflatedTasks.push(inflatedTask);
+                //set state to the tasks from the database
+                that.setState({
+                    tasks: inflatedTasks,
+                });
+            });
+        });
+
     }
 
     /*
