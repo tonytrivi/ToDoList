@@ -17,6 +17,7 @@ export default class App extends React.Component {
     }
 
     componentWillMount(){
+        console.log("componentWillMount viewExpired " + this.state.viewExpired);
         //list tasks
         const firebaseRef = firebase.database().ref().child('object');
         
@@ -28,24 +29,29 @@ export default class App extends React.Component {
             
             //loop over database objects - prepare for display
             snapshot.forEach(function(data){
-                var inflatedTask = {
+                //get the tasks that haven't expired
+                if (data.val().isExpired == that.state.viewExpired) {
+                    var inflatedTask = {
                     ID: data.val().ID,
                     description: data.val().description,
                     timeCreated: data.val().timeCreated,
                     isCompleted: data.val().isCompleted,
                     isExpired: data.val().isExpired
-                }
+                    }
 
-                inflatedTasks.push(inflatedTask);
-                //set state to the tasks from the database
+                    inflatedTasks.push(inflatedTask);
+                }
+                
+                //attach the tasks to state
                 that.setState({
                     tasks: inflatedTasks,
                 });
+                //console.log("componentWillMount - viewExpired " + that.state.viewExpired);
             });
         });
     }
-  
-    componentDidMount(){
+
+    componentWillUpdate(){
     }
 
     render() {
@@ -105,8 +111,9 @@ export default class App extends React.Component {
     // set to view expired tasks
     */
     viewExpired() {
-        //get expired tasks
-        const firebaseRef = firebase.database().ref().child('expired');
+        console.log("componentWillUpdate viewExpired was " + this.state.viewExpired);
+        //list tasks
+        const firebaseRef = firebase.database().ref().child('object');
         
         var that = this;
 
@@ -116,22 +123,58 @@ export default class App extends React.Component {
             
             //loop over database objects - prepare for display
             snapshot.forEach(function(data){
-                var inflatedTask = {
+                //toggle which tasks to view
+                if (data.val().isExpired == !that.state.viewExpired) {
+                    var inflatedTask = {
                     ID: data.val().ID,
                     description: data.val().description,
                     timeCreated: data.val().timeCreated,
                     isCompleted: data.val().isCompleted,
                     isExpired: data.val().isExpired
-                }
+                    }
 
-                inflatedTasks.push(inflatedTask);
-                //set state to the tasks from the database
+                    inflatedTasks.push(inflatedTask);
+                }
+                
+                //attach the tasks to state
                 that.setState({
                     tasks: inflatedTasks,
-                    viewExpired: true
+                    viewExpired: !that.state.viewExpired
                 });
             });
         });
+ 
+
+        //get expired tasks
+    //    const firebaseRef = firebase.database().ref().child('object');
+        
+    //    var that = this;
+
+        //do data sync
+    //    firebaseRef.on('value', snapshot => {
+    //        var inflatedTasks = [];
+            
+            //loop over database objects
+    //        snapshot.forEach(function(data){
+                //get the expired tasks
+    //            if (data.val().isExpired == true) {
+    //                var inflatedTask = {
+    //                    ID: data.val().ID,
+    //                    description: data.val().description,
+    //                    timeCreated: data.val().timeCreated,
+    //                    isCompleted: data.val().isCompleted,
+    //                    isExpired: data.val().isExpired
+    //                }
+
+    //                inflatedTasks.push(inflatedTask);
+    //           }
+                //set state to the tasks from the database
+    //            that.setState({
+    //                tasks: inflatedTasks,
+    //                viewExpired: true
+    //            });
+    //        });
+    //    });
 
     }
 

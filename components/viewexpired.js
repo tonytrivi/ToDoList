@@ -24,7 +24,6 @@ export default class ViewExpired extends React.Component {
     }
 
     handleViewExpired(event) {
-        console.log('we are in handleTaskMove');
         this.props.viewExpired('a big arg');
     }
 }
