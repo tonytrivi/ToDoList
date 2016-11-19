@@ -6,7 +6,7 @@ export default class ViewExpired extends React.Component {
             <div className="move-div">
                 <div className="move-text-container">
                     <span className="span-shim"></span>
-                    <span className="header-text">View expired tasks </span>
+                    <span className="header-text">Toggle expired tasks </span>
                 </div>
                 <div className="move-button-container">
                     <span className="span-shim"></span>

@@ -42,6 +42,25 @@ export default class TaskListItem extends React.Component {
 
     renderActionsSection() {
         var createdDate = new Date(this.props.dateCreated);
+        if (this.props.viewExpired) {
+            return (
+                <span className="task-item-date right">{createdDate.getMonth()}/{createdDate.getDate()}   
+                        <span> </span>
+                        <img src="../resources/images/edit.svg" 
+                            className="edit-img"
+                            alt="edit" 
+                            height="15" 
+                            width="15" /> 
+                        <span> </span>
+                        <img src="../resources/images/x.svg" 
+                            className="delete-img"
+                            alt="delete" 
+                            height="14" 
+                            width="14" />
+                </span>
+            );
+        }
+
         if (this.state.isEditing) {
             return (
                 <span className="task-item-date right">{createdDate.getMonth()}/{createdDate.getDate()} 
@@ -100,8 +119,10 @@ export default class TaskListItem extends React.Component {
     // in most cases you'd want to handle setting state in the top-level component
     */
     onEditClick() {
+        console.log('you clicked edit - viewExpired is ' + this.props.viewExpired);
         //this refers to the component
         this.setState({ isEditing: true });
+        
     }
 
     /* 
@@ -131,7 +152,7 @@ export default class TaskListItem extends React.Component {
     */
     onSaveClick(event) {
         event.preventDefault();
-        this.props.saveTask(this.props.desc, this.refs.descInput.value);
+        this.props.saveTask(this.props.desc, this.props.ID, this.refs.descInput.value);
 
         this.setState({ isEditing: false });
     }

@@ -17,7 +17,6 @@ export default class App extends React.Component {
     }
 
     componentWillMount(){
-        console.log("componentWillMount viewExpired " + this.state.viewExpired);
         //list tasks
         const firebaseRef = firebase.database().ref().child('object');
         
@@ -30,7 +29,7 @@ export default class App extends React.Component {
             //loop over database objects - prepare for display
             snapshot.forEach(function(data){
                 //get the tasks that haven't expired
-                if (data.val().isExpired == that.state.viewExpired) {
+                //if (data.val().isExpired == that.state.viewExpired) {
                     var inflatedTask = {
                     ID: data.val().ID,
                     description: data.val().description,
@@ -40,7 +39,7 @@ export default class App extends React.Component {
                     }
 
                     inflatedTasks.push(inflatedTask);
-                }
+                //}
                 
                 //attach the tasks to state
                 that.setState({
@@ -49,9 +48,6 @@ export default class App extends React.Component {
                 //console.log("componentWillMount - viewExpired " + that.state.viewExpired);
             });
         });
-    }
-
-    componentWillUpdate(){
     }
 
     render() {
@@ -111,9 +107,16 @@ export default class App extends React.Component {
     // set to view expired tasks
     */
     viewExpired() {
-        console.log("componentWillUpdate viewExpired was " + this.state.viewExpired);
-        //list tasks
-        const firebaseRef = firebase.database().ref().child('object');
+        //console.log("componentWillUpdate viewExpired was " + this.state.viewExpired);
+        var firebaseRef;
+        
+        //you want to do the opposite of the current state
+        if (!this.state.viewExpired){
+            firebaseRef = firebase.database().ref().child('expired');
+        }
+        else {
+            firebaseRef = firebase.database().ref().child('object');
+        }
         
         var that = this;
 
@@ -124,7 +127,7 @@ export default class App extends React.Component {
             //loop over database objects - prepare for display
             snapshot.forEach(function(data){
                 //toggle which tasks to view
-                if (data.val().isExpired == !that.state.viewExpired) {
+                //if (data.val().isExpired == !that.state.viewExpired) {
                     var inflatedTask = {
                     ID: data.val().ID,
                     description: data.val().description,
@@ -134,7 +137,7 @@ export default class App extends React.Component {
                     }
 
                     inflatedTasks.push(inflatedTask);
-                }
+                //}
                 
                 //attach the tasks to state
                 that.setState({
@@ -143,39 +146,6 @@ export default class App extends React.Component {
                 });
             });
         });
- 
-
-        //get expired tasks
-    //    const firebaseRef = firebase.database().ref().child('object');
-        
-    //    var that = this;
-
-        //do data sync
-    //    firebaseRef.on('value', snapshot => {
-    //        var inflatedTasks = [];
-            
-            //loop over database objects
-    //        snapshot.forEach(function(data){
-                //get the expired tasks
-    //            if (data.val().isExpired == true) {
-    //                var inflatedTask = {
-    //                    ID: data.val().ID,
-    //                    description: data.val().description,
-    //                    timeCreated: data.val().timeCreated,
-    //                    isCompleted: data.val().isCompleted,
-    //                    isExpired: data.val().isExpired
-    //                }
-
-    //                inflatedTasks.push(inflatedTask);
-    //           }
-                //set state to the tasks from the database
-    //            that.setState({
-    //                tasks: inflatedTasks,
-    //                viewExpired: true
-    //            });
-    //        });
-    //    });
-
     }
 
     /*
@@ -199,13 +169,15 @@ export default class App extends React.Component {
         firebaseRefObject.push(newTask);
         this.state.tasks.push(newTask);
         
-        this.setState({ tasks: this.state.tasks });
+        this.setState({ tasks: this.state.tasks,
+                        viewExpired: false
+                     });
     }
 
     /*
     // changes a task description and saves it
     */
-    saveTask(oldTaskDesc, newTaskDesc){
+    saveTask(oldTaskDesc, taskID, newTaskDesc){
         const firebaseRefObject = firebase.database().ref().child('object');
 
         function findTaskObj(task) {
@@ -219,7 +191,9 @@ export default class App extends React.Component {
         //overwrite the database tasks
         firebaseRefObject.set(this.state.tasks);
 
-        this.setState({ tasks: this.state.tasks });
+        this.setState({ tasks: this.state.tasks,
+                        viewExpired: false
+                     });
     }
 
     /*
@@ -239,6 +213,8 @@ export default class App extends React.Component {
         //overwrite the database tasks
         firebaseRefObject.set(this.state.tasks);
 
-        //this.setState({ tasks: this.state.tasks });
+        this.setState({ tasks: this.state.tasks,
+                        viewExpired: false
+                     });
     }
 }
