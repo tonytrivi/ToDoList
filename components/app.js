@@ -60,7 +60,8 @@ export default class App extends React.Component {
                             saveTask={this.saveTask.bind(this)}
                             deleteTask={this.deleteTask.bind(this)}
                             viewExpired={this.state.viewExpired} />
-                        <ViewExpired viewExpired={this.viewExpired.bind(this)} />
+                        <ViewExpired viewExpired={this.viewExpired.bind(this)}
+                                     moveExpired={this.moveExpired.bind(this)} />
                         <div className="icon-credit">Icons <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">cc 3.0 by</a></div>
                     </div>
             );
@@ -75,7 +76,8 @@ export default class App extends React.Component {
                             saveTask={this.saveTask.bind(this)}
                             deleteTask={this.deleteTask.bind(this)}
                             viewExpired={this.state.viewExpired} />
-                        <ViewExpired viewExpired={this.viewExpired.bind(this)} />
+                        <ViewExpired viewExpired={this.viewExpired.bind(this)}
+                                     moveExpired={this.moveExpired.bind(this)} />
                         <div className="icon-credit">Icons <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">cc 3.0 by</a></div>
                     </div>
         );
@@ -143,6 +145,58 @@ export default class App extends React.Component {
                 that.setState({
                     tasks: inflatedTasks,
                     viewExpired: !that.state.viewExpired
+                });
+            });
+        });
+    }
+
+    /*
+    // shift tasks to the expired list
+    */
+    moveExpired() {
+        console.log('we are in top-level moveExpired');
+        var firebaseRef = firebase.database().ref().child('object');
+        var firebaseRefExpired = firebase.database().ref().child('expired');
+        var that = this;
+
+        //do data sync
+        firebaseRef.on('value', snapshot => {
+            //var inflatedTasks = [];
+            
+            //loop over database objects
+            snapshot.forEach(function(data){
+                var createdDate = new Date(data.val().timeCreated);
+                var taskIdentifier = data.val().ID;
+                var taskDescription = data.val().description;
+
+                //moving condition
+                if (createdDate.getSeconds() > 50) {
+                    var inflatedTask = {
+                    ID: data.val().ID,
+                    description: data.val().description,
+                    timeCreated: data.val().timeCreated,
+                    isCompleted: data.val().isCompleted,
+                    isExpired: data.val().isExpired
+                    }
+                    
+                    //move it
+                    firebaseRefExpired.push(inflatedTask);
+
+                    //take it out of the non-expired items
+                    for (var i=0; i<that.state.tasks.length; i++){
+                        if (that.state.tasks[i].ID == taskIdentifier){
+                            //remove item at this position
+                            console.log("remove the item with description " + taskDescription);
+                            that.state.tasks.splice(i, 1);
+                        };
+                    };
+                }
+
+                //overwrite the database tasks
+                firebaseRef.set(that.state.tasks);
+
+                that.setState({ tasks: that.state.tasks,
+                        viewExpired: false
                 });
             });
         });
