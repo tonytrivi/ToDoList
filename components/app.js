@@ -12,6 +12,7 @@ export default class App extends React.Component {
 
         this.state = {
             tasks: [],
+            expired: 0,
             viewExpired: false
         };
     }
@@ -19,8 +20,14 @@ export default class App extends React.Component {
     componentWillMount(){
         //list tasks
         const firebaseRef = firebase.database().ref().child('object');
-        
+        const firebaseRefEx = firebase.database().ref().child('expired');
+        var exCount;
+    
         var that = this;
+        //ex count
+        //firebaseRef.on('value', snapshot => {
+        //    exCount = firebaseRefEx.numChildren();
+        //});
 
         //do data sync
         firebaseRef.on('value', snapshot => {
@@ -43,7 +50,8 @@ export default class App extends React.Component {
                 
                 //attach the tasks to state
                 that.setState({
-                    tasks: inflatedTasks,
+                    tasks: inflatedTasks//,
+                    //expired: exCount
                 });
                 //console.log("componentWillMount - viewExpired " + that.state.viewExpired);
             });
@@ -154,10 +162,10 @@ export default class App extends React.Component {
     // shift tasks to the expired list
     */
     moveExpired() {
-        console.log('we are in top-level moveExpired');
         var firebaseRef = firebase.database().ref().child('object');
         var firebaseRefExpired = firebase.database().ref().child('expired');
         var that = this;
+        var expiredTaskCount = 0;
 
         //do data sync
         firebaseRef.on('value', snapshot => {
@@ -170,14 +178,14 @@ export default class App extends React.Component {
                 var taskDescription = data.val().description;
 
                 //moving condition
-                if (createdDate.getSeconds() > 50) {
+                if (createdDate.getSeconds() > 19) {
                     var inflatedTask = {
                     ID: data.val().ID,
                     description: data.val().description,
                     timeCreated: data.val().timeCreated,
                     isCompleted: data.val().isCompleted,
                     isExpired: data.val().isExpired
-                    }
+                }
                     
                     //move it
                     firebaseRefExpired.push(inflatedTask);
@@ -190,16 +198,20 @@ export default class App extends React.Component {
                             that.state.tasks.splice(i, 1);
                         };
                     };
+                    //overwrite the database tasks
+                    firebaseRef.set(that.state.tasks);
+                    
+                    that.setState({ 
+                        tasks: that.state.tasks,
+                        //expired: expiredTaskCount,
+                        viewExpired: false
+                    });
                 }
 
-                //overwrite the database tasks
-                firebaseRef.set(that.state.tasks);
-
-                that.setState({ tasks: that.state.tasks,
-                        viewExpired: false
-                });
+                
             });
         });
+
     }
 
     /*
@@ -224,8 +236,8 @@ export default class App extends React.Component {
         this.state.tasks.push(newTask);
         
         this.setState({ tasks: this.state.tasks,
-                        viewExpired: false
-                     });
+            viewExpired: false
+        });
     }
 
     /*
@@ -246,8 +258,8 @@ export default class App extends React.Component {
         firebaseRefObject.set(this.state.tasks);
 
         this.setState({ tasks: this.state.tasks,
-                        viewExpired: false
-                     });
+            viewExpired: false
+        });
     }
 
     /*
@@ -269,6 +281,6 @@ export default class App extends React.Component {
 
         this.setState({ tasks: this.state.tasks,
                         viewExpired: false
-                     });
+        });
     }
 }

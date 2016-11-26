@@ -1,6 +1,10 @@
 import React from 'react';
 
 export default class ViewExpired extends React.Component {
+
+    componentWillMount(){
+    }
+
     render() {
         return (
             <div className="move-div">
@@ -33,6 +37,10 @@ export default class ViewExpired extends React.Component {
                         width="15"
                         onClick={this.handleMoveExpired.bind(this)} /> 
                     </button>
+                </div>
+                <div className="move-text-container">
+                    <span className="span-shim"></span>
+                    <span className="header-text">{ this.props.expiredTaskCount } expired tasks</span>
                 </div>
             </div>
         );

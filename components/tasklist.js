@@ -15,7 +15,7 @@ export default class TaskList extends React.Component {
         return <div>{ taskList }</div>
     }
     render() {
-        console.log('tasklist.props.viewExpired' + this.props.viewExpired);
+        //console.log('tasklist.props.viewExpired' + this.props.viewExpired);
         if (this.props.viewExpired == false) {
             return (
                     <div className="task-list">
