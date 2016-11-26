@@ -166,51 +166,109 @@ export default class App extends React.Component {
         var firebaseRefExpired = firebase.database().ref().child('expired');
         var that = this;
         var expiredTaskCount = 0;
+        //logging
+        for (var i=0; i<this.state.tasks.length; i++){
+            console.log('task descs ' + this.state.tasks[i].description);
+        }
+
+        //loop through the non-expired
+        for (var i=0; i<this.state.tasks.length; i++){
+            //add to expired and splice out of current task list
+            var createdDate     = new Date(that.state.tasks[i].timeCreated);
+            var taskIdentifier  = that.state.tasks[i].ID;
+            var taskDescription = that.state.tasks[i].description;
+            console.log('task seconds' + createdDate.getSeconds());
+
+            if (createdDate.getSeconds() > 19) {
+                //move the task to expired
+                var taskToMove = {
+                    ID:             taskIdentifier,
+                    description:    taskDescription,
+                    timeCreated:    createdDate,
+                    isCompleted:    that.state.tasks[i].isCompleted,
+                    isExpired:      that.state.tasks[i].isExpired
+                }
+                firebaseRefExpired.push(taskToMove);
+
+                //remove from the active list
+                console.log("remove the item with description " + taskDescription);
+                //that.state.tasks.splice(i, 1);
+                that.state.tasks[i] = null;
+            }
+
+        };
+
+        //create a new list
+        var paredTaskList = [];
+        for (var i=0; i<that.state.tasks.length; i++){
+            if(that.state.tasks[i] !== null) {
+                console.log('adding task ' + that.state.tasks[i]);
+                paredTaskList.push(that.state.tasks[i]);
+            }
+        }
+
+        //overwrite the database tasks
+        //function remover(val) {
+        //    console.log(val);
+        //    return (val !== null);
+        //}
+        //this.state.tasks.filter(remover);
+
+        console.log('filtered tasks');
+        console.log(paredTaskList);
+        firebaseRef.set(paredTaskList);
+
+        //reset the UI      
+        this.setState({ 
+            tasks: paredTaskList,
+            viewExpired: false
+        });
 
         //do data sync
-        firebaseRef.on('value', snapshot => {
+        //firebaseRef.on('value', snapshot => {
             //var inflatedTasks = [];
             
             //loop over database objects
-            snapshot.forEach(function(data){
-                var createdDate = new Date(data.val().timeCreated);
-                var taskIdentifier = data.val().ID;
-                var taskDescription = data.val().description;
+        //    snapshot.forEach(function(data){
+        //        var createdDate = new Date(data.val().timeCreated);
+        //        var taskIdentifier = data.val().ID;
+        //        var taskDescription = data.val().description;
 
                 //moving condition
-                if (createdDate.getSeconds() > 19) {
-                    var inflatedTask = {
-                    ID: data.val().ID,
-                    description: data.val().description,
-                    timeCreated: data.val().timeCreated,
-                    isCompleted: data.val().isCompleted,
-                    isExpired: data.val().isExpired
-                }
+        //        if (createdDate.getSeconds() > 19) {
+        //            var inflatedTask = {
+        //            ID: data.val().ID,
+        //            description: data.val().description,
+        //            timeCreated: data.val().timeCreated,
+        //            isCompleted: data.val().isCompleted,
+        //            isExpired: data.val().isExpired
+        //        }
                     
                     //move it
-                    firebaseRefExpired.push(inflatedTask);
+        //            firebaseRefExpired.push(inflatedTask);
 
                     //take it out of the non-expired items
-                    for (var i=0; i<that.state.tasks.length; i++){
-                        if (that.state.tasks[i].ID == taskIdentifier){
+        //            for (var i=0; i<that.state.tasks.length; i++){
+        //                if (that.state.tasks[i].ID == taskIdentifier){
                             //remove item at this position
-                            console.log("remove the item with description " + taskDescription);
-                            that.state.tasks.splice(i, 1);
-                        };
-                    };
-                    //overwrite the database tasks
-                    firebaseRef.set(that.state.tasks);
+        //                    console.log("remove the item with description " + taskDescription);
+        //                    that.state.tasks.splice(i, 1);
+        //                };
+        //            };
                     
-                    that.setState({ 
-                        tasks: that.state.tasks,
-                        //expired: expiredTaskCount,
-                        viewExpired: false
-                    });
-                }
+        //        }
+                //overwrite the database tasks
+        //        firebaseRef.set(that.state.tasks);
+                    
+        //        that.setState({ 
+        //            tasks: that.state.tasks,
+                    //expired: expiredTaskCount,
+        //            viewExpired: false
+        //        });
 
                 
-            });
-        });
+        //    });
+        //});
 
     }
 
@@ -234,8 +292,11 @@ export default class App extends React.Component {
 
         firebaseRefObject.push(newTask);
         this.state.tasks.push(newTask);
+
+        console.log(this.state.tasks);
         
-        this.setState({ tasks: this.state.tasks,
+        this.setState({ 
+            tasks: this.state.tasks,
             viewExpired: false
         });
     }
