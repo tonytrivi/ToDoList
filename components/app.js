@@ -18,6 +18,8 @@ export default class App extends React.Component {
     }
 
     componentWillMount(){
+        //console.log('in componentwillmount');
+        //console.log(this.getExpiredCount());
         //list tasks
         const firebaseRef = firebase.database().ref().child('object');
         const firebaseRefEx = firebase.database().ref().child('expired');
@@ -28,8 +30,6 @@ export default class App extends React.Component {
 
         //do data sync
         firebaseRef.on('value', snapshot => {
-            
-            
             //loop over database objects - prepare for display
             snapshot.forEach(function(data){
                 //get the tasks that haven't expired
@@ -50,23 +50,21 @@ export default class App extends React.Component {
             });
 
             
-             
-            
             
         });
 
         firebaseRefEx.on('value', snapshot => {
-                snapshot.forEach(function(data){
-                    exTaskCount++;
-                });
-                console.log('expiredCount ' + exTaskCount);
-                console.log(inflatedTasks);
-                that.setState({
-                    tasks: inflatedTasks,
-                    expiredTaskCount: exTaskCount
-                });
-                
+            snapshot.forEach(function(data){
+                exTaskCount++;
             });
+
+            //console.log(inflatedTasks);
+            that.setState({
+                tasks: inflatedTasks,
+                expiredTaskCount: exTaskCount
+            });
+                
+        });
         
         //attach the tasks to state
         
@@ -184,18 +182,13 @@ export default class App extends React.Component {
         var firebaseRefExpired = firebase.database().ref().child('expired');
         var that = this;
         var expiredTaskCount = 0;
-        //logging
-        for (var i=0; i<this.state.tasks.length; i++){
-            console.log('task descs ' + this.state.tasks[i].description);
-        }
 
         //loop through the non-expired
         for (var i=0; i<this.state.tasks.length; i++){
-            //add to expired and splice out of current task list
+            //add to expired and remove from current task list
             var createdDate     = new Date(that.state.tasks[i].timeCreated);
             var taskIdentifier  = that.state.tasks[i].ID;
             var taskDescription = that.state.tasks[i].description;
-            console.log('task seconds' + createdDate.getSeconds());
 
             if (createdDate.getSeconds() > 19) {
                 //move the task to expired
@@ -220,26 +213,20 @@ export default class App extends React.Component {
         var paredTaskList = [];
         for (var i=0; i<that.state.tasks.length; i++){
             if(that.state.tasks[i] !== null) {
-                console.log('adding task ' + that.state.tasks[i]);
                 paredTaskList.push(that.state.tasks[i]);
             }
         }
 
-        //overwrite the database tasks
-        //function remover(val) {
-        //    console.log(val);
-        //    return (val !== null);
-        //}
-        //this.state.tasks.filter(remover);
-
-        console.log('filtered tasks');
+        console.log('pared task list');
         console.log(paredTaskList);
         firebaseRef.set(paredTaskList);
 
-        //reset the UI      
+        //reset the UI
+        expiredTaskCount = this.getExpiredCount();
+
         this.setState({ 
             tasks: paredTaskList,
-            expiredTaskCount: 26,
+            expiredTaskCount: expiredTaskCount,
             viewExpired: false
         });
 
@@ -292,6 +279,24 @@ export default class App extends React.Component {
     }
 
     /*
+    // get a count of expired tasks
+    */
+    getExpiredCount() {
+        var firebaseRefExpired = firebase.database().ref().child('expired');
+        var exCount = 0;
+
+        firebaseRefExpired.on('value', snapshot => {
+            exCount = snapshot.numChildren();
+            //snapshot.forEach(function(data){
+            //    exCount++;
+            //});
+        });
+
+        return exCount;
+
+    }
+
+    /*
     //Add a task to the list
     */
     createTask(desc) {
@@ -308,14 +313,21 @@ export default class App extends React.Component {
             isCompleted: false,
             isExpired: false
         };
+ 
+        //replace the UI collection
+        var arrCopiedTasks = [];
 
+        //replace with a splice
+        for(var i=0;i<this.state.tasks.length;i++){
+            arrCopiedTasks.push(this.state.tasks[i]);
+        }
+
+        arrCopiedTasks.push(newTask);
+        //if you move this up, it can interfere with state
         firebaseRefObject.push(newTask);
-        this.state.tasks.push(newTask);
 
-        console.log(this.state.tasks);
-        
         this.setState({ 
-            tasks: this.state.tasks,
+            tasks: arrCopiedTasks,
             viewExpired: false
         });
     }
