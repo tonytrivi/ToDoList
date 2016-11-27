@@ -12,7 +12,7 @@ export default class App extends React.Component {
 
         this.state = {
             tasks: [],
-            expired: 0,
+            expiredTaskCount: 0,
             viewExpired: false
         };
     }
@@ -21,17 +21,14 @@ export default class App extends React.Component {
         //list tasks
         const firebaseRef = firebase.database().ref().child('object');
         const firebaseRefEx = firebase.database().ref().child('expired');
-        var exCount;
+        var exTaskCount = 0;
+        var inflatedTasks = [];
     
         var that = this;
-        //ex count
-        //firebaseRef.on('value', snapshot => {
-        //    exCount = firebaseRefEx.numChildren();
-        //});
 
         //do data sync
         firebaseRef.on('value', snapshot => {
-            var inflatedTasks = [];
+            
             
             //loop over database objects - prepare for display
             snapshot.forEach(function(data){
@@ -48,14 +45,31 @@ export default class App extends React.Component {
                     inflatedTasks.push(inflatedTask);
                 //}
                 
-                //attach the tasks to state
-                that.setState({
-                    tasks: inflatedTasks//,
-                    //expired: exCount
-                });
+               
                 //console.log("componentWillMount - viewExpired " + that.state.viewExpired);
             });
+
+            
+             
+            
+            
         });
+
+        firebaseRefEx.on('value', snapshot => {
+                snapshot.forEach(function(data){
+                    exTaskCount++;
+                });
+                console.log('expiredCount ' + exTaskCount);
+                console.log(inflatedTasks);
+                that.setState({
+                    tasks: inflatedTasks,
+                    expiredTaskCount: exTaskCount
+                });
+                
+            });
+        
+        //attach the tasks to state
+        
     }
 
     render() {
@@ -68,7 +82,9 @@ export default class App extends React.Component {
                             saveTask={this.saveTask.bind(this)}
                             deleteTask={this.deleteTask.bind(this)}
                             viewExpired={this.state.viewExpired} />
-                        <ViewExpired viewExpired={this.viewExpired.bind(this)}
+                        <ViewExpired 
+                                     expiredTaskCount={this.state.expiredTaskCount}
+                                     viewExpired={this.viewExpired.bind(this)}
                                      moveExpired={this.moveExpired.bind(this)} />
                         <div className="icon-credit">Icons <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">cc 3.0 by</a></div>
                     </div>
@@ -84,7 +100,9 @@ export default class App extends React.Component {
                             saveTask={this.saveTask.bind(this)}
                             deleteTask={this.deleteTask.bind(this)}
                             viewExpired={this.state.viewExpired} />
-                        <ViewExpired viewExpired={this.viewExpired.bind(this)}
+                        <ViewExpired 
+                                     expiredTaskCount={this.state.expiredTaskCount}
+                                     viewExpired={this.viewExpired.bind(this)}
                                      moveExpired={this.moveExpired.bind(this)} />
                         <div className="icon-credit">Icons <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">cc 3.0 by</a></div>
                     </div>
@@ -221,6 +239,7 @@ export default class App extends React.Component {
         //reset the UI      
         this.setState({ 
             tasks: paredTaskList,
+            expiredTaskCount: 26,
             viewExpired: false
         });
 

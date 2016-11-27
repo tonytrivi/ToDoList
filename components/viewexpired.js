@@ -6,6 +6,7 @@ export default class ViewExpired extends React.Component {
     }
 
     render() {
+        console.log(this.props.expiredTaskCount);
         return (
             <div className="move-div">
                 <div className="move-text-container">
