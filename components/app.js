@@ -18,8 +18,6 @@ export default class App extends React.Component {
     }
 
     componentWillMount(){
-        //console.log('in componentwillmount');
-        //console.log(this.getExpiredCount());
         //list tasks
         const firebaseRef = firebase.database().ref().child('object');
         const firebaseRefEx = firebase.database().ref().child('expired');
@@ -190,7 +188,7 @@ export default class App extends React.Component {
             var taskIdentifier  = that.state.tasks[i].ID;
             var taskDescription = that.state.tasks[i].description;
 
-            if (createdDate.getSeconds() > 19) {
+            if (this.getDateAge(createdDate) > 60) {
                 //move the task to expired
                 var taskToMove = {
                     ID:             taskIdentifier,
@@ -303,8 +301,8 @@ export default class App extends React.Component {
         const firebaseRefObject = firebase.database().ref().child('object');
 
         var theDate = new Date();
-        var m = theDate.getMonth();
-        theDate.setMonth(m+1);
+        //var m = theDate.getMonth();
+        //theDate.setMonth(m+1);
 
         var newTask = {
             ID: this.state.tasks.length + (Math.floor(Math.random() * 100000) + 1),
@@ -375,4 +373,17 @@ export default class App extends React.Component {
                         viewExpired: false
         });
     }
+
+    /*
+    // return the seconds between now and a passed in date
+    */
+    getDateAge(taskDate){
+        var incomingDate = new Date(taskDate);
+        var now = new Date();
+
+        var difference = now.getTime() - incomingDate.getTime();
+        return Math.round(difference / 1000);
+    }
+
+
 }
