@@ -336,18 +336,25 @@ export default class App extends React.Component {
     saveTask(oldTaskDesc, taskID, newTaskDesc){
         const firebaseRefObject = firebase.database().ref().child('object');
 
+        //replace the UI task collection
+        var copiedTasks = [];
+
+        for(var i=0;i<this.state.tasks.length;i++){
+            copiedTasks.push(this.state.tasks[i]);
+        }
+
         function findTaskObj(task) {
             //get the object with the description we're looking for
             return task.description === oldTaskDesc;
         }
         
-        var foundTaskObj = this.state.tasks.find(findTaskObj);
+        var foundTaskObj = copiedTasks.find(findTaskObj);
         foundTaskObj.description = newTaskDesc;
 
         //overwrite the database tasks
-        firebaseRefObject.set(this.state.tasks);
+        firebaseRefObject.set(copiedTasks);
 
-        this.setState({ tasks: this.state.tasks,
+        this.setState({ tasks: copiedTasks,
             viewExpired: false
         });
     }
@@ -357,19 +364,27 @@ export default class App extends React.Component {
     */
     deleteTask(ID){
         const firebaseRefObject = firebase.database().ref().child('object');
+
+        //replace the UI task collection
+        var copiedTasks = [];
+
+        for(var i=0;i<this.state.tasks.length;i++){
+            copiedTasks.push(this.state.tasks[i]);
+        }
         
-        for (var i=0; i<this.state.tasks.length; i++){
-            if (this.state.tasks[i].ID == ID){
+        //iterate and delete one
+        for (var i=0; i<copiedTasks.length; i++){
+            if (copiedTasks[i].ID == ID){
                 //remove item at this position
-                console.log("remove the item with description " + this.state.tasks[i].description );
-                this.state.tasks.splice(i, 1);
+                console.log("remove the item with description " + copiedTasks[i].description );
+                copiedTasks.splice(i, 1);
             };
         };
 
         //overwrite the database tasks
-        firebaseRefObject.set(this.state.tasks);
+        firebaseRefObject.set(copiedTasks);
 
-        this.setState({ tasks: this.state.tasks,
+        this.setState({ tasks: copiedTasks,
                         viewExpired: false
         });
     }
