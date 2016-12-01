@@ -28,6 +28,7 @@
     "babel-core": "^6.17.0",
     "babel-jest": "^17.0.2",
     "babel-loader": "^6.2.5",
+    "babel-polyfill": "^6.16.0",
     "babel-preset-es2015": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "jest": "^17.0.2",

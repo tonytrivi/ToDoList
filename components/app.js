@@ -193,7 +193,7 @@ export default class App extends React.Component {
                 var taskToMove = {
                     ID:             taskIdentifier,
                     description:    taskDescription,
-                    timeCreated:    createdDate,
+                    timeCreated:    createdDate.toISOString(),
                     isCompleted:    that.state.tasks[i].isCompleted,
                     isExpired:      that.state.tasks[i].isExpired
                 }
