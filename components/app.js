@@ -2,6 +2,7 @@ import React from 'react';
 import TaskList from './tasklist.js';
 import CreateTask from './createtask.js';
 import ViewExpired from './viewexpired.js';
+import Timer from './timer.js';
 import * as firebase from 'firebase';
 
 var d = new Date();
@@ -71,23 +72,28 @@ export default class App extends React.Component {
     render() {
         if (this.state.viewExpired) {
             return (
-                    <div className="app-surround">
-                        <TaskList 
-                            tasks={this.state.tasks}
-                            toggleTask={this.toggleTask.bind(this)} 
-                            saveTask={this.saveTask.bind(this)}
-                            deleteTask={this.deleteTask.bind(this)}
-                            viewExpired={this.state.viewExpired} />
-                        <ViewExpired 
-                                     expiredTaskCount={this.state.expiredTaskCount}
-                                     viewExpired={this.viewExpired.bind(this)}
-                                     moveExpired={this.moveExpired.bind(this)} />
-                        <div className="icon-credit">Icons <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">cc 3.0 by</a></div>
+                    <div className="app-box">
+                        <div className="top-title"><span className="title-content">Task Manager</span></div>
+                        <div className="app-surround">
+                            <TaskList 
+                                tasks={this.state.tasks}
+                                toggleTask={this.toggleTask.bind(this)} 
+                                saveTask={this.saveTask.bind(this)}
+                                deleteTask={this.deleteTask.bind(this)}
+                                viewExpired={this.state.viewExpired} />
+                            <ViewExpired 
+                                        expiredTaskCount={this.state.expiredTaskCount}
+                                        viewExpired={this.viewExpired.bind(this)}
+                                        moveExpired={this.moveExpired.bind(this)} />
+                            <div className="icon-credit">Icons <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">cc 3.0 by</a></div>
+                        </div>
                     </div>
             );
         }
 
         return (
+                <div className="app-box">
+                    <div className="top-title"><span className="title-content">Task Manager</span></div>
                     <div className="app-surround">
                         <CreateTask createTask={this.createTask.bind(this)} />
                         <TaskList 
@@ -102,6 +108,7 @@ export default class App extends React.Component {
                                      moveExpired={this.moveExpired.bind(this)} />
                         <div className="icon-credit">Icons <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">cc 3.0 by</a></div>
                     </div>
+                </div>
         );
     }
 
@@ -115,16 +122,24 @@ export default class App extends React.Component {
             //get the object with the description we're looking for
             return task.description === taskDesc;
         }
+
+        //replace the UI collection
+        var arrCopiedTasks = [];
+
+        //replace with a splice
+        for(var i=0;i<this.state.tasks.length;i++){
+            arrCopiedTasks.push(this.state.tasks[i]);
+        }
         
         //this refers to the component
-        var foundTaskObj = this.state.tasks.find(findTaskObj);
+        var foundTaskObj = arrCopiedTasks.find(findTaskObj);
         foundTaskObj.isCompleted = !foundTaskObj.isCompleted;
         console.log(foundTaskObj);
 
         //overwrite the database tasks
-        firebaseRef.set(this.state.tasks);
+        firebaseRef.set(arrCopiedTasks);
         //refresh tasks
-        this.setState({ tasks: this.state.tasks });
+        this.setState({ tasks: arrCopiedTasks });
     }
 
     /*
@@ -387,6 +402,40 @@ export default class App extends React.Component {
         this.setState({ tasks: copiedTasks,
                         viewExpired: false
         });
+    }
+
+    /*
+    // sets tasks to expired
+    */
+    expireTasks(){
+        const firebaseRefObject = firebase.database().ref().child('object');
+        var that = this;
+
+        //replace the UI task collection
+        var copiedTasks = [];
+
+        for(var i=0;i<this.state.tasks.length;i++){
+            copiedTasks.push(this.state.tasks[i]);
+        }
+
+        //iterate and delete one
+        for (var i=0; i<copiedTasks.length; i++){
+            var createdDate  = new Date(copiedTasks[i].timeCreated);
+            if (that.getDateAge(createdDate) > 60) {
+                //set expired property
+                copiedTasks[i].isExpired = true;
+                //remove from the active list
+                console.log("set to expired " + copiedTasks[i].description);
+            }
+        };
+
+        //overwrite the database tasks
+        firebaseRefObject.set(copiedTasks);
+
+        this.setState({ tasks: copiedTasks,
+                        viewExpired: false
+        });
+
     }
 
     /*

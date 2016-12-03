@@ -104,8 +104,11 @@ export default class TaskListItem extends React.Component {
     
     
     render() {
+            const containerStyle = {
+                backgroundColor: this.props.isExpired ? '#ffc4c4' : ''
+            };
             return (
-                <div className="task-item-container">
+                <div className="task-item-container" style={containerStyle}>
                     <div className="task-item">
                         {this.renderTaskSection()}
                         {this.renderActionsSection()}

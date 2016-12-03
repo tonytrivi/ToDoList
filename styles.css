@@ -1,3 +1,21 @@
+.app-box {
+    width: 100%;
+}
+
+.top-title {
+    text-align: center;
+    border-bottom: 1px solid #edeeef;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.title-content {
+    text-transform: uppercase;
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-stretch: expanded;
+    font-size: 2.3em;
+}
+
 body {
     background-color: #fcfcfc;
 }

@@ -9,7 +9,7 @@ export default class TaskList extends React.Component {
         var saveFunc = this.props.saveTask;
         var deleteFunc = this.props.deleteTask;
         var taskList = this.props.tasks.map(function(task, index){
-                        return <TaskListItem key={index} viewExpired={that.props.viewExpired} desc={task.description} dateCreated={task.timeCreated} isCompleted={task.isCompleted} toggleTask={toggleFunc} saveTask={saveFunc} deleteTask={deleteFunc} ID={task.ID}  />;
+                        return <TaskListItem key={index} viewExpired={that.props.viewExpired} desc={task.description} dateCreated={task.timeCreated} isCompleted={task.isCompleted} isExpired={task.isExpired} toggleTask={toggleFunc} saveTask={saveFunc} deleteTask={deleteFunc} ID={task.ID}  />;
                       })
 
         return <div>{ taskList }</div>
