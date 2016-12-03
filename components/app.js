@@ -84,7 +84,8 @@ export default class App extends React.Component {
                             <ViewExpired 
                                         expiredTaskCount={this.state.expiredTaskCount}
                                         viewExpired={this.viewExpired.bind(this)}
-                                        moveExpired={this.moveExpired.bind(this)} />
+                                        moveExpired={this.moveExpired.bind(this)}
+                                        markExpired={this.markExpired.bind(this)} />
                             <div className="icon-credit">Icons <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">cc 3.0 by</a></div>
                         </div>
                     </div>
@@ -105,7 +106,8 @@ export default class App extends React.Component {
                         <ViewExpired 
                                      expiredTaskCount={this.state.expiredTaskCount}
                                      viewExpired={this.viewExpired.bind(this)}
-                                     moveExpired={this.moveExpired.bind(this)} />
+                                     moveExpired={this.moveExpired.bind(this)}
+                                     markExpired={this.markExpired.bind(this)} />
                         <div className="icon-credit">Icons <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> and licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">cc 3.0 by</a></div>
                     </div>
                 </div>
@@ -188,6 +190,37 @@ export default class App extends React.Component {
     }
 
     /*
+    // check tasks and set to expired
+    */
+    markExpired() {
+        var firebaseRef = firebase.database().ref().child('object');
+        var that = this;
+
+        //replace the UI collection
+        var arrCopiedTasks = [];
+
+        for(var i=0;i<this.state.tasks.length;i++){
+            arrCopiedTasks.push(this.state.tasks[i]);
+        }
+
+        //loop through the non-expired
+        for (var i=0; i<arrCopiedTasks.length; i++){
+            var createdDate = new Date(arrCopiedTasks[i].timeCreated);
+
+            if (this.getDateAge(createdDate) > 60) {
+                arrCopiedTasks[i].isExpired = true;
+
+                console.log("set to expired " + arrCopiedTasks[i].description);
+            }
+        };
+
+        //overwrite the database tasks
+        firebaseRef.set(arrCopiedTasks);
+        //refresh tasks
+        this.setState({ tasks: arrCopiedTasks });
+    }
+
+    /*
     // shift tasks to the expired list
     */
     moveExpired() {
@@ -210,7 +243,7 @@ export default class App extends React.Component {
                     description:    taskDescription,
                     timeCreated:    createdDate.toISOString(),
                     isCompleted:    that.state.tasks[i].isCompleted,
-                    isExpired:      that.state.tasks[i].isExpired
+                    isExpired:      true
                 }
                 firebaseRefExpired.push(taskToMove);
 
