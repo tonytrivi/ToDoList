@@ -16,6 +16,16 @@ export default class TaskListItem extends React.Component {
             color: this.props.isCompleted ? 'green' : 'red',
             cursor: 'pointer'
         };
+        if (this.props.viewExpired) {
+            return (
+                <div className="task-item-desc-container">
+                    <span className="task-item-desc" 
+                    style={taskStyle}
+                    ref="descSpan" >
+                    {this.props.desc}</span>
+                </div>
+            );
+        }
 
         if (this.state.isEditing) {
             return (

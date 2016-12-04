@@ -217,11 +217,12 @@ export default class App extends React.Component {
         //overwrite the database tasks
         firebaseRef.set(arrCopiedTasks);
         //refresh tasks
-        this.setState({ tasks: arrCopiedTasks });
+        this.setState({ tasks: arrCopiedTasks,
+                        viewExpired: false });
     }
 
     /*
-    // shift tasks to the expired list
+    // shift completed and expired tasks to the expired list
     */
     moveExpired() {
         var firebaseRef = firebase.database().ref().child('object');
@@ -272,56 +273,8 @@ export default class App extends React.Component {
 
         this.setState({ 
             tasks: paredTaskList,
-            expiredTaskCount: expiredTaskCount,
-            viewExpired: false
+            expiredTaskCount: expiredTaskCount
         });
-
-        //do data sync
-        //firebaseRef.on('value', snapshot => {
-            //var inflatedTasks = [];
-            
-            //loop over database objects
-        //    snapshot.forEach(function(data){
-        //        var createdDate = new Date(data.val().timeCreated);
-        //        var taskIdentifier = data.val().ID;
-        //        var taskDescription = data.val().description;
-
-                //moving condition
-        //        if (createdDate.getSeconds() > 19) {
-        //            var inflatedTask = {
-        //            ID: data.val().ID,
-        //            description: data.val().description,
-        //            timeCreated: data.val().timeCreated,
-        //            isCompleted: data.val().isCompleted,
-        //            isExpired: data.val().isExpired
-        //        }
-                    
-                    //move it
-        //            firebaseRefExpired.push(inflatedTask);
-
-                    //take it out of the non-expired items
-        //            for (var i=0; i<that.state.tasks.length; i++){
-        //                if (that.state.tasks[i].ID == taskIdentifier){
-                            //remove item at this position
-        //                    console.log("remove the item with description " + taskDescription);
-        //                    that.state.tasks.splice(i, 1);
-        //                };
-        //            };
-                    
-        //        }
-                //overwrite the database tasks
-        //        firebaseRef.set(that.state.tasks);
-                    
-        //        that.setState({ 
-        //            tasks: that.state.tasks,
-                    //expired: expiredTaskCount,
-        //            viewExpired: false
-        //        });
-
-                
-        //    });
-        //});
-
     }
 
     /*
