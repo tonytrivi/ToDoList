@@ -11,7 +11,7 @@ export default class ViewExpired extends React.Component {
             <div className="move-div">
                 <div className="move-text-container">
                     <span className="span-shim"></span>
-                    <span className="header-text">Toggle expired task view </span>
+                    <span className="header-text">View expired tasks </span>
                 </div>
                 <div className="move-button-container">
                     <span className="span-shim"></span>
@@ -27,7 +27,7 @@ export default class ViewExpired extends React.Component {
                 </div>
                 <div className="move-text-container">
                     <span className="span-shim"></span>
-                    <span className="header-text">Move expired tasks to archive </span>
+                    <span className="header-text">Move expired tasks </span>
                 </div>
                 <div className="move-button-container">
                     <span className="span-shim"></span>
@@ -42,7 +42,7 @@ export default class ViewExpired extends React.Component {
                 </div>
                 <div className="move-text-container">
                     <span className="span-shim"></span>
-                    <span className="header-text">Mark tasks as expired </span>
+                    <span className="header-text">Mark expired tasks </span>
                 </div>
                 <div className="move-button-container">
                     <span className="span-shim"></span>
@@ -57,7 +57,7 @@ export default class ViewExpired extends React.Component {
                 </div>
                 <div className="move-text-container">
                     <span className="span-shim"></span>
-                    <span className="header-text">expired task count - { this.props.expiredTaskCount }</span>
+                    <span className="header-text">Expired task count - { this.props.expiredTaskCount }</span>
                 </div>
             </div>
         );

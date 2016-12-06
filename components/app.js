@@ -119,6 +119,7 @@ export default class App extends React.Component {
     */
     toggleTask(taskDesc){
         const firebaseRef = firebase.database().ref().child('object');
+        //console.log('viewExpired was: ' + this.state.viewExpired);
 
         function findTaskObj(task) {
             //get the object with the description we're looking for
@@ -133,7 +134,6 @@ export default class App extends React.Component {
             arrCopiedTasks.push(this.state.tasks[i]);
         }
         
-        //this refers to the component
         var foundTaskObj = arrCopiedTasks.find(findTaskObj);
         foundTaskObj.isCompleted = !foundTaskObj.isCompleted;
         console.log(foundTaskObj);
@@ -141,14 +141,15 @@ export default class App extends React.Component {
         //overwrite the database tasks
         firebaseRef.set(arrCopiedTasks);
         //refresh tasks
-        this.setState({ tasks: arrCopiedTasks });
+        this.setState({ tasks: arrCopiedTasks,
+                        viewExpired: false });
     }
 
     /*
     // set to view expired tasks
     */
     viewExpired() {
-        //console.log("componentWillUpdate viewExpired was " + this.state.viewExpired);
+        console.log("componentWillUpdate viewExpired was " + this.state.viewExpired);
         var firebaseRef;
         
         //you want to do the opposite of the current state
@@ -160,31 +161,30 @@ export default class App extends React.Component {
         }
         
         var that = this;
-
+        var inflatedTasks = [];
+        
         //do data sync
         firebaseRef.on('value', snapshot => {
-            var inflatedTasks = [];
+            
             
             //loop over database objects - prepare for display
             snapshot.forEach(function(data){
-                //toggle which tasks to view
-                //if (data.val().isExpired == !that.state.viewExpired) {
-                    var inflatedTask = {
-                    ID: data.val().ID,
-                    description: data.val().description,
-                    timeCreated: data.val().timeCreated,
-                    isCompleted: data.val().isCompleted,
-                    isExpired: data.val().isExpired
-                    }
+                var inflatedTask = {
+                ID: data.val().ID,
+                description: data.val().description,
+                timeCreated: data.val().timeCreated,
+                isCompleted: data.val().isCompleted,
+                isExpired: data.val().isExpired
+                }
 
-                    inflatedTasks.push(inflatedTask);
-                //}
+                inflatedTasks.push(inflatedTask);
+
                 
-                //attach the tasks to state
-                that.setState({
-                    tasks: inflatedTasks,
-                    viewExpired: !that.state.viewExpired
-                });
+            });
+            //attach the tasks to state
+            that.setState({
+                tasks: inflatedTasks,
+                viewExpired: !that.state.viewExpired
             });
         });
     }
