@@ -57,7 +57,7 @@ export default class ViewExpired extends React.Component {
                 </div>
                 <div className="move-text-container">
                     <span className="span-shim"></span>
-                    <span className="header-text">Expired task count - { this.props.expiredTaskCount }</span>
+                    <span className="header-text">Expired task count is { this.props.expiredTaskCount }</span>
                 </div>
             </div>
         );

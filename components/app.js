@@ -273,7 +273,8 @@ export default class App extends React.Component {
 
         this.setState({ 
             tasks: paredTaskList,
-            expiredTaskCount: expiredTaskCount
+            expiredTaskCount: expiredTaskCount,
+            viewExpired: false
         });
     }
 
