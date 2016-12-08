@@ -32,20 +32,16 @@ export default class App extends React.Component {
             //loop over database objects - prepare for display
             snapshot.forEach(function(data){
                 //get the tasks that haven't expired
-                //if (data.val().isExpired == that.state.viewExpired) {
-                    var inflatedTask = {
-                    ID: data.val().ID,
-                    description: data.val().description,
-                    timeCreated: data.val().timeCreated,
-                    isCompleted: data.val().isCompleted,
-                    isExpired: data.val().isExpired
-                    }
+                var inflatedTask = {
+                ID: data.val().ID,
+                description: data.val().description,
+                timeCreated: data.val().timeCreated,
+                isCompleted: data.val().isCompleted,
+                isExpired: data.val().isExpired
+                }
 
-                    inflatedTasks.push(inflatedTask);
-                //}
-                
-               
-                //console.log("componentWillMount - viewExpired " + that.state.viewExpired);
+                inflatedTasks.push(inflatedTask);
+       
             });
 
             

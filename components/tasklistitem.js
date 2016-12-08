@@ -92,6 +92,34 @@ export default class TaskListItem extends React.Component {
             );
         }
 
+        if (this.props.isExpired) {
+            return (
+                <span className="task-item-date right">{createdDate.getMonth() + 1}/{createdDate.getDate()}   
+                            <span> </span>
+                            <img src="../resources/images/skull.svg" 
+                                className="expire-img-active"
+                                alt="edit" 
+                                height="15" 
+                                width="15" /> 
+                            <span> </span>
+                            <img src="../resources/images/edit.svg" 
+                                className="edit-img"
+                                alt="edit" 
+                                height="15" 
+                                width="15"
+                                onClick={this.onEditClick.bind(this)} /> 
+                            <span> </span>
+                            <img src="../resources/images/x.svg" 
+                                className="delete-img"
+                                alt="delete" 
+                                height="14" 
+                                width="14"
+                                onClick={this.onDeleteClick.bind(this)} />
+                </span>
+            );
+            
+        }
+
         return (
             <span className="task-item-date right">{createdDate.getMonth() + 1}/{createdDate.getDate()}   
                         <span> </span>
@@ -114,11 +142,11 @@ export default class TaskListItem extends React.Component {
     
     
     render() {
-            const containerStyle = {
-                backgroundColor: this.props.isExpired ? '#ffc4c4' : ''
-            };
+            //const containerStyle = {
+            //    backgroundColor: this.props.isExpired ? '#ffc4c4' : ''
+            //};
             return (
-                <div className="task-item-container" style={containerStyle}>
+                <div className="task-item-container">
                     <div className="task-item">
                         {this.renderTaskSection()}
                         {this.renderActionsSection()}
@@ -132,7 +160,6 @@ export default class TaskListItem extends React.Component {
     // in most cases you'd want to handle setting state in the top-level component
     */
     onEditClick() {
-        console.log('you clicked edit - viewExpired is ' + this.props.viewExpired);
         //this refers to the component
         this.setState({ isEditing: true });
         
